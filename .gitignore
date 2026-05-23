@@ -1,3 +1,37 @@
+#Data & Models
 data/
-.ipynb_checkpoints/
+*.h5ad
+*.csv
+*.tsv
+*.mtx
+*.h5
+*.RData
+
+*.pt
+*.pth
+
+#PYTHON & JUPYTER NOTEBOOK
 __pycache__/
+*.py[cod]
+*$py.class
+.ipynb_checkpoints/
+
+#Virtual Environments
+.env
+.venv
+env/
+venv/
+conda_env/
+
+#OS Generated Files
+.DS_Store
+.DS_Store?
+._*
+.Trashes
+
+# Windows
+Thumbs.db
+ehthumbs.db
+
+
+
