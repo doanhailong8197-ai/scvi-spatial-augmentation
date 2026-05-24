@@ -5,16 +5,12 @@ import scanpy as sc
 import scipy.sparse as sp
 from anndata import AnnData
 
-
 def augment_data(
     adata: AnnData, 
     label_col: str = 'cell_type', 
     alpha: float = 0.4, 
     random_state: int = 42
 ) -> AnnData:
-    """
-    Perform data augmentation using stochastic hard-label Mixup to balance cell types.
-    """
     rng = np.random.default_rng(random_state)
     
     counts = adata.obs[label_col].value_counts()
@@ -59,15 +55,16 @@ def augment_data(
         X_aug.data = np.clip(X_aug.data, 0, None)
         X_aug.data[X_aug.data < 1e-4] = 0
         X_aug.eliminate_zeros()
-
+        
+        new_obs = adata.obs.iloc[idx1].copy()
+        new_obs.index = [f"mix_{i}_{cell_type}" for i in range(n_needed)]
+        
         y1 = adata.obs.iloc[idx1][label_col].values
         y2 = adata.obs.iloc[idx2][label_col].values
-
         choose_y1 = rng.random(n_needed) < lam
         new_labels = np.where(choose_y1, y1, y2)
-
-        new_obs = pd.DataFrame({label_col: new_labels})
-        new_obs.index = [f"mix_{i}_{cell_type}" for i in range(n_needed)]
+        
+        new_obs[label_col] = new_labels
 
         X_list.append(X_aug)
         obs_list.append(new_obs)
